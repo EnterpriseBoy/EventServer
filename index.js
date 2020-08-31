@@ -8,3 +8,7 @@ router.get('/', function (req,res,next){
 });
 
 app.use('/api/',router);
+
+var server = app.listen(5050, function() {
+    console.log('Node server is running on http://localhost:5050..');
+});
