@@ -1,0 +1,14 @@
+[
+    {    
+    "id":1,
+    "name":"Dublin Marathon",
+    "startDate":"28/12/2020",
+    "EndDate":"29/12/2020"
+},
+{
+    "id":2,
+    "name":"london Marathon",
+    "startDate":"28/12/2020",
+    "EndDate":"29/12/2020"
+}
+]
