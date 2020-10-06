@@ -1,14 +1,26 @@
-let express  = require('express');
-let app = express();
+const express = require('express');
+const app = express();
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-let router = express.Router();
+//import routes
+const authRoute = require('./routes/auth');
 
-router.get('/', function (req,res,next){
-    res.send("Event");
-});
+dotenv.config();
 
-app.use('/api/',router);
+//Connect to Database
+mongoose.connect(process.env.DB_CONNECT,
+{ useUnifiedTopology: true } ,
+() => console.log('Connected to database'));
 
-var server = app.listen(5050, function() {
-    console.log('Node server is running on http://localhost:5050..');
-});
+//Middleware
+app.use(express.json());
+
+//Router middleware
+app.use('/api/user', authRoute);
+
+
+app.listen(3000,() => console.log('Server listening on port: 3000'))
+
+
+//https://youtu.be/2jqok-WgelI?t=1484
