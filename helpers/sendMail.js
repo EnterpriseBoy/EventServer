@@ -1,9 +1,9 @@
 const sgEmail = require("@sendgrid/mail");
-sgEmail.setApiKey('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');
+sgEmail.setApiKey('EMAIL_SENDING_API_KEY');
 
 const sendVerificationEmail = () => {
     const msg = {
-        to: "niall.maguire@topmail.ie",
+        to: "niall.maguire@zoho.com",
         from: "niall.maguire@zoho.com",
         subject:"Please verify your account",
         text:"please verify your account",
