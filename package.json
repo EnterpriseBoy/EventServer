@@ -10,6 +10,7 @@
   "author": "Niall Maguire",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.2.6",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -20,7 +21,7 @@
   "devDependencies": {
     "nodemon": "^2.0.4"
   },
-  "engines":{
-    "node":"12.18.3"
+  "engines": {
+    "node": "12.18.3"
   }
 }

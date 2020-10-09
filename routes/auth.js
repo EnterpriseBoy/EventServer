@@ -1,9 +1,11 @@
-const router = require('express').Router();
-const User = require('../model/User');
-const jwt = require('jsonwebtoken');
-const {registerValidation,loginValidation} = require('../helpers/validation')
 const Joi = require('joi');
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken');
+const router = require('express').Router();
+const User = require('../model/User');
+const {registerValidation,loginValidation} = require('../helpers/validation')
+const {sendVerificationEmail} = require('../helpers/sendMail');
+
 
 
 router.post('/register', async (req,res) =>{
@@ -20,6 +22,7 @@ router.post('/register', async (req,res) =>{
         return res.status(400).send('User already registered');
     }
 
+
     //Password Hash
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(req.body.password,salt);
@@ -32,7 +35,9 @@ router.post('/register', async (req,res) =>{
 
     try{
         const savedUser = await user.save();
-        res.send(savedUser);
+        //Send verification email
+        sendVerificationEmail();
+        res.send(`Please verify now here are your details ${savedUser}`);
     }catch(err){
         res.status(400).send(err);
     }
@@ -55,6 +60,11 @@ router.post('/login',async (req,res) =>{
     const validPassword = await bcrypt.compare(req.body.password,user.password);
     if(!validPassword){
         return res.status(400).send('Email or Password or incorrect2');
+    }
+
+    const validatedUser = await User.findOne({email: req.body.email})
+    if(validatedUser.validated === false){
+        return res.status(400).send('pleaes verify');
     }
 
     //Create token

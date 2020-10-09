@@ -1,3 +1,4 @@
+// DO I NEED THIS ANYMORE ???
 let fs = require('fs');
 
 const FILE_NAME = './assets/events.json';
