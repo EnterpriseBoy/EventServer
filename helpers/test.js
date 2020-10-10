@@ -1,7 +1,4 @@
-//const sendgrid = require("sendgrid")("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");
-const sendVerificationEmail = () => {
-    
-    const mailjet = require ('node-mailjet')
+const mailjet = require ('node-mailjet')
 .connect('6a70ff05e25cee934b538f3d9e1206c2', 'a8ba1ef910de95c06b1aa2df70a4c2dd')
 const request = mailjet
 .post("send", {'version': 'v3.1'})
@@ -31,7 +28,4 @@ request
   })
   .catch((err) => {
     console.log(err.statusCode)
-  });
-}
-
-module.exports = {sendVerificationEmail}
+  })
