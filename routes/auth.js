@@ -37,7 +37,7 @@ router.post('/register', async (req,res) =>{
         const savedUser = await user.save();
         console.log("you are verified");
         //Send verification email
-        sendVerificationEmail();
+        sendVerificationEmail('./emails/verify.html');
         res.send(`Please verify now here are your details ${savedUser}`);
     }catch(err){
         res.status(400).send(err);
