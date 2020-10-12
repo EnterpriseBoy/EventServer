@@ -5,6 +5,7 @@ const router = require('express').Router();
 const User = require('../model/User');
 const {registerValidation,loginValidation} = require('../helpers/validation')
 const {sendVerificationEmail} = require('../helpers/sendMail');
+const { models } = require('mongoose');
 
 
 
@@ -35,9 +36,11 @@ router.post('/register', async (req,res) =>{
 
     try{
         const savedUser = await user.save();
-        console.log("you are verified");
         //Send verification email
-        sendVerificationEmail('./emails/verify.html');
+        //const token = jwt.sign({_id: user._id},process.env.TOKEN_SECRET);
+        //sendVerificationEmail('./emails/verify.html',savedUser.email,"niall.maguire@zoho.com","Please confirm your email with eventrv",`http://localhost:3000/api/conformation/token=${token}`);
+        sendVerificationEmail('./emails/verify.html',"Please verify your account",savedUser.email,"niall.maguire@zoho.com");
+
         res.send(`Please verify now here are your details ${savedUser}`);
     }catch(err){
         res.status(400).send(err);
@@ -73,6 +76,17 @@ router.post('/login',async (req,res) =>{
     res.header('auth-token',token).send(token);
 
     //res.send('You are logged in');
+});
+
+router.get('/conformation/:token',async (req,res) => {
+    try{
+        const {user: {id} } = jwt.verify(req.params.token,TOKEN_SECRET);
+        await models.User.update({confirmed:true},{where:{id}});
+    }catch(err){
+        send(err);
+    }
+
+    return res.redirect(www.google.com)
 });
 
 
