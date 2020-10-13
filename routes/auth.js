@@ -18,11 +18,10 @@ router.post('/register', async (req,res) =>{
     }
 
     //Duplicate user
-    const emailExists = await User.findOne({email: req.body.email})
-    if(emailExists){
-        return res.status(400).send('User already registered');
-    }
-
+    // const emailExists = await User.findOne({email: req.body.email})
+    // if(emailExists){
+    //     return res.status(400).send('User already registered');
+    // }
 
     //Password Hash
     const salt = await bcrypt.genSalt(10);
@@ -37,9 +36,11 @@ router.post('/register', async (req,res) =>{
     try{
         const savedUser = await user.save();
         //Send verification email
-        //const token = jwt.sign({_id: user._id},process.env.TOKEN_SECRET);
+        const token = jwt.sign({_id: user._id},process.env.TOKEN_SECRET);
+        console.log(`Token: ${token}`);
+        const linkAddress = `http://localhost:3000/api/conformation/token=${token}`
         //sendVerificationEmail('./emails/verify.html',savedUser.email,"niall.maguire@zoho.com","Please confirm your email with eventrv",`http://localhost:3000/api/conformation/token=${token}`);
-        sendVerificationEmail('./emails/verify.html',"Please verify your account",savedUser.email,"niall.maguire@zoho.com");
+        sendVerificationEmail('./emails/verify.html',"Please verify your account",savedUser.email,"niall.maguire@topmail.ie",linkAddress);
 
         res.send(`Please verify now here are your details ${savedUser}`);
     }catch(err){

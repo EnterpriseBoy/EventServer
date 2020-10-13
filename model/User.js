@@ -20,6 +20,9 @@ const userSchema = new mongoose.Schema({
         min:6,
         max:255
     },
+    validationCode:{
+        type: String,
+    },
     validated:{
         type: Boolean,
         default:false,

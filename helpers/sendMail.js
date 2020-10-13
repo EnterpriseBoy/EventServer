@@ -1,7 +1,9 @@
 const readFile = require('../Emails/readFile');
 
-const sendVerificationEmail = (file,subject,sendTo,sendFrom) => {
-    readFile(file,'utf8').then(data => { 
+const sendVerificationEmail = (file,subject,sendTo,sendFrom,link) => {
+    var emailToBeSent = sendTo;
+    readFile(file,'utf8').then(data => data.replace(/{{action_url}}/g, link))
+    .then(data => { 
         const mailjet = require ('node-mailjet')
         //TODO CREATE ENV VARIABLES FOR THESE
         .connect('6a70ff05e25cee934b538f3d9e1206c2', 'a8ba1ef910de95c06b1aa2df70a4c2dd')
@@ -11,7 +13,7 @@ const sendVerificationEmail = (file,subject,sendTo,sendFrom) => {
             "Messages":[
                 {
                 "From": {
-                    "Email": "niall.maguire@topmail.ie",
+                    "Email": sendFrom,
                     "Name": "Niall"
                 },
                 "To": [
@@ -27,7 +29,6 @@ const sendVerificationEmail = (file,subject,sendTo,sendFrom) => {
                 }
             ]
         })
-        
         request
         .then((result) => {
             console.log(result.body);
