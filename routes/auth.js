@@ -38,7 +38,7 @@ router.post('/register', async (req,res) =>{
         //Send verification email
         const token = jwt.sign({_id: user._id},process.env.TOKEN_SECRET);
         console.log(`Token: ${token}`);
-        const linkAddress = `http://localhost:3000/api/conformation/token=${token}`
+        const linkAddress = `http://localhost:3000/api/user/conformation/token=${token}`
         //sendVerificationEmail('./emails/verify.html',savedUser.email,"niall.maguire@zoho.com","Please confirm your email with eventrv",`http://localhost:3000/api/conformation/token=${token}`);
         sendVerificationEmail('./emails/verify.html',"Please verify your account",savedUser.email,"niall.maguire@topmail.ie",linkAddress);
 
@@ -79,15 +79,16 @@ router.post('/login',async (req,res) =>{
     //res.send('You are logged in');
 });
 
-router.get('/conformation/:token',async (req,res) => {
+router.get('/conformation',async (req,res) => {
     try{
         const {user: {id} } = jwt.verify(req.params.token,TOKEN_SECRET);
-        await models.User.update({confirmed:true},{where:{id}});
+        //await models.User.update({confirmed:true},{where:{id}});
+        res.send(`You are verified with token ${req.query.token}`);
     }catch(err){
-        send(err);
+       res.send(err);
     }
 
-    return res.redirect(www.google.com)
+    return res.send(`You are verified with token ${req.query.token}`);
 });
 
 
