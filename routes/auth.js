@@ -18,31 +18,29 @@ router.post('/register', async (req,res) =>{
     }
 
     //Duplicate user
-    // const emailExists = await User.findOne({email: req.body.email})
-    // if(emailExists){
-    //     return res.status(400).send('User already registered');
-    // }
+    const emailExists = await User.findOne({email: req.body.email})
+    if(emailExists){
+        return res.status(400).send('User already registered');
+    }
 
     //Password Hash
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(req.body.password,salt);
+    const validationToken = jwt.sign(req.body.name,process.env.TOKEN_SECRET);
+    const linkAddress = `http://localhost:3000/api/user/conformation?token=${validationToken}`;
 
     const user = new User({
         name: req.body.name,
         email: req.body.email,
         password: hashPassword,
+        validationCode: validationToken,
     });
 
     try{
         const savedUser = await user.save();
         //Send verification email
-        const token = jwt.sign({_id: user._id},process.env.TOKEN_SECRET);
-        console.log(`Token: ${token}`);
-        const linkAddress = `http://localhost:3000/api/user/conformation/token=${token}`
-        //sendVerificationEmail('./emails/verify.html',savedUser.email,"niall.maguire@zoho.com","Please confirm your email with eventrv",`http://localhost:3000/api/conformation/token=${token}`);
         sendVerificationEmail('./emails/verify.html',"Please verify your account",savedUser.email,"niall.maguire@topmail.ie",linkAddress);
-
-        res.send(`Please verify now here are your details ${savedUser}`);
+        res.status(200).send("Please verify your account");
     }catch(err){
         res.status(400).send(err);
     }
@@ -67,6 +65,7 @@ router.post('/login',async (req,res) =>{
         return res.status(400).send('Email or Password or incorrect2');
     }
 
+    //Validating account
     const validatedUser = await User.findOne({email: req.body.email})
     if(validatedUser.validated === false){
         return res.status(400).send('pleaes verify');
@@ -76,19 +75,33 @@ router.post('/login',async (req,res) =>{
     const token = jwt.sign({_id: user._id},process.env.TOKEN_SECRET);
     res.header('auth-token',token).send(token);
 
-    //res.send('You are logged in');
+    res.send('You are logged in');
 });
 
 router.get('/conformation',async (req,res) => {
     try{
-        const {user: {id} } = jwt.verify(req.params.token,TOKEN_SECRET);
-        //await models.User.update({confirmed:true},{where:{id}});
-        res.send(`You are verified with token ${req.query.token}`);
+
+        const tokenUser =await User.findOne({validationCode: req.query.token});
+        if(!tokenUser){
+            return res.status(400).send('you were not validated');
+        }
+
+        const tokenName = jwt.verify(req.query.token,process.env.TOKEN_SECRET);
+        console.log(tokenUser.name);
+
+        if(tokenName === tokenUser.name){
+            //Updating user
+            res.status(200).send(`You are verified with token ${req.query.token}`);
+            tokenUser.validated= true;
+            const savedUser = await tokenUser.save();
+        }
+
     }catch(err){
        res.send(err);
     }
+    
 
-    return res.send(`You are verified with token ${req.query.token}`);
+    //return res.send(`You are verified with token ${req.query.token}`);
 });
 
 
