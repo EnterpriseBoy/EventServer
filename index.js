@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+var cors = require('cors')
 let port = process.env.PORT || 3000;
 
 //import routes
@@ -13,6 +14,8 @@ dotenv.config();
 mongoose.connect(process.env.DB_CONNECT,
 { useUnifiedTopology: true } ,
 () => console.log('Connected to database'));
+
+app.use(cors());
 
 //Middleware
 app.use(express.json());
