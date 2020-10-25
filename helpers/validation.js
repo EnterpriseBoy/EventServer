@@ -18,7 +18,6 @@ const loginValidation = (data) => {
         email: Joi.string().required().email(),
         password: Joi.string().min(6).required()
     });
-
     return loginSchema.validate(data,{ abortEarly: false });
 }
 

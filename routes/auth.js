@@ -14,7 +14,7 @@ router.post('/register', async (req,res) =>{
     //Validation
     const {error} = registerValidation(req.body);
     if(error){
-        return res.status(422).send(error.details.map(err => err.message));
+        return res.status(422).send(error.details.map(err => err.message.replace(/['"]+/g, '')));
     }
 
     //Duplicate user
@@ -50,8 +50,9 @@ router.post('/login',async (req,res) =>{
 
     //Validation
     const {error} = loginValidation(req.body);
+    console.log(error);
     if(error){
-        return res.status(422).send(error.details.map(err => err.message));
+        return res.status(422).send(error.details.map(err => err.message.replace(/['"]+/g, '')));
     }
 
     //Check user exists
