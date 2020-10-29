@@ -58,12 +58,12 @@ router.post('/login',async (req,res) =>{
     //Check user exists
     const user = await User.findOne({email: req.body.email});
     if(!user){
-        return res.status(400).send('Email or Password or incorrect');
+        return res.status(400).send(['Email or Password or incorrect']);
     }
 
     const validPassword = await bcrypt.compare(req.body.password,user.password);
     if(!validPassword){
-        return res.status(400).send('Email or Password or incorrect2');
+        return res.status(400).send(['Email or Password or incorrect2']);
     }
 
     //Validating account
