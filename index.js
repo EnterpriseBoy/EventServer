@@ -7,6 +7,7 @@ let port = process.env.PORT || 3000;
 
 //import routes
 const authRoute = require('./routes/auth');
+const eventRoute = require('./routes/event');
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 
 //Router middleware
 app.use('/api/user', authRoute);
+app.use('/api/event', eventRoute);
 
 
 app.listen(port,() => console.log('Server listening on port: 3000'))
