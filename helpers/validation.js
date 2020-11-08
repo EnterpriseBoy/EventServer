@@ -1,6 +1,7 @@
 //Validation
 const Joi = require('joi');
 
+
 const registerValidation = (data) => {
 
     const registerSchema = Joi.object({
@@ -21,5 +22,20 @@ const loginValidation = (data) => {
     return loginSchema.validate(data,{ abortEarly: false });
 }
 
-module.exports = {registerValidation,loginValidation};
+const postEventValidation = (data) => {
+
+    const eventSchema = Joi.object({
+        name: Joi.string().required(),
+        description: Joi.string().min(6).required(),
+        location: Joi.string().min(6).required(),
+        voluntersNeeded: Joi.number(),
+        startDate: Joi.date(),
+        endDate: Joi.date()
+    });
+    return eventSchema.validate(data,{ abortEarly: false });
+}
+
+
+
+module.exports = {registerValidation,loginValidation,postEventValidation};
 
