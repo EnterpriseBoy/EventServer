@@ -29,7 +29,7 @@ router.post('/', async (req,res) =>{
 
     try{
         const saveEvent = await event.save();
-        res.status(200).send("Event Saved");
+        res.status(200).json(saveEvent);
     }catch(err){
         res.status(400).send(err);
     }
